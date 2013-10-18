@@ -6,6 +6,8 @@ semantics to allow for sources whose page identifiers are non-ordinal
 (i.e. a page identifier of `3` does not necessarily indicate the third
 page).
 
+[![Build Status](https://travis-ci.org/lukfugl/folio.png?branch=master)](https://travis-ci.org/lukfugl/folio)
+
 ## Installation
 
 Add this line to your application's Gemfile:
