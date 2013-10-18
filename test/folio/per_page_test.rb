@@ -1,18 +1,18 @@
 require 'minitest/autorun'
-require 'parchment/per_page'
+require 'folio/per_page'
 
-describe Parchment::PerPage do
+describe Folio::PerPage do
   before do
-    @klass = Class.new{ include Parchment::PerPage }
+    @klass = Class.new{ include Folio::PerPage }
     @object = @klass.new
   end
 
   describe "default_per_page" do
-    it "should be Parchment.per_page" do
-      was = Parchment.per_page
-      Parchment.per_page = 100
+    it "should be Folio.per_page" do
+      was = Folio.per_page
+      Folio.per_page = 100
       @object.default_per_page.must_equal 100
-      Parchment.per_page = was
+      Folio.per_page = was
     end
   end
 

@@ -1,20 +1,20 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'parchment/version'
+require 'folio/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "parchment"
-  spec.version       = Parchment::VERSION
+  spec.name          = "folio-pagination"
+  spec.version       = Folio::VERSION
   spec.authors       = ["Jacob Fugal"]
   spec.email         = ["jacob@instructure.com"]
   spec.description   = %q{A pagination library.}
   spec.summary       = %q{
-    Parchment is a library for pagination. It's meant to be nearly compatible
+    Folio is a library for pagination. It's meant to be nearly compatible
     with WillPaginate, but with broader -- yet more well-defined -- semantics
     to allow for sources whose page identifiers are non-ordinal.
   }
-  spec.homepage      = "https://github.com/instructure/parchment"
+  spec.homepage      = "https://github.com/instructure/folio"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

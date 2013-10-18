@@ -1,7 +1,7 @@
-module Parchment
+module Folio
   module PerPage
     def default_per_page
-      Parchment.per_page
+      Folio.per_page
     end
 
     def per_page(*args)

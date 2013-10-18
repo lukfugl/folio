@@ -1,38 +1,38 @@
-require 'parchment/sheaf/ordinal'
-require 'parchment/sheet/basic'
+require 'folio/ordinal'
+require 'folio/basic_page'
 
-# Extends any Enumerable to be a Parchment::Sheaf::Ordinal.
+# Extends any Enumerable to be a Folio::Ordinal.
 module Enumerable
-  def build_sheet
-    ::Parchment::Sheet::Basic.new
+  def build_page
+    ::Folio::BasicPage.new
   end
 
-  def fill_sheet(sheet)
-    slice = self.each_slice(sheet.per_page).first(sheet.current_page)[sheet.current_page-1]
+  def fill_page(page)
+    slice = self.each_slice(page.per_page).first(page.current_page)[page.current_page-1]
     if slice.nil?
-      if sheet.current_page > sheet.first_page
-        raise ::Parchment::InvalidPage
+      if page.current_page > page.first_page
+        raise ::Folio::InvalidPage
       else
         slice = []
       end
     end
-    sheet.replace slice
+    page.replace slice
   end
 
-  include ::Parchment::Sheaf::Ordinal
+  include ::Folio::Ordinal
 
   # this is crazy, but it essentially links in the methods defined on
   # the module we just included into Enumerable itself, so that things
   # that already included Enumerable can inherit them
-  ::Parchment::Sheaf::Ordinal.instance_methods.each do |method|
+  ::Folio::Ordinal.instance_methods.each do |method|
     alias_method method, method
   end
 
   # things that already included Enumerable won't have extended the
   # PerPage, so the instance's default default_per_page method looking
   # at self.class.per_page won't work. point it back at
-  # Parchment.per_page
+  # Folio.per_page
   def default_per_page
-    Parchment.per_page
+    Folio.per_page
   end
 end
