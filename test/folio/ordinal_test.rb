@@ -19,6 +19,7 @@ describe Folio::Ordinal do
   describe "decorated build_page" do
     before do
       @page = @folio.build_page
+      @page.current_page = 1
       @page.per_page = 10
       @page.total_entries = 30
     end
@@ -32,49 +33,69 @@ describe Folio::Ordinal do
       @page.first_page.must_equal 1
     end
 
-    it "should have last_page=total_pages" do
-      @page.last_page.must_equal @page.total_pages
+    describe "when total pages known" do
+      it "should have last_page=total_pages" do
+        @page.last_page.must_equal @page.total_pages
 
-      @page.total_entries = 0
-      @page.last_page.must_equal @page.total_pages
+        @page.total_entries = 0
+        @page.last_page.must_equal @page.total_pages
 
-      @page.total_entries = nil
-      @page.last_page.must_equal @page.total_pages
+        @page.total_entries = nil
+        @page.last_page.must_equal @page.total_pages
+      end
+
+      it "should have next_page=current_page+1 when not at end" do
+        @page.current_page = 2
+        @page.next_page.must_equal 3
+      end
+
+      it "should still have next_page=current_page+1 when not at end, despite set value" do
+        @page.current_page = 2
+        @page.next_page = nil
+        @page.next_page.must_equal 3
+      end
+
+      it "should have next_page=nil when at end" do
+        @page.current_page = 3
+        @page.next_page.must_be_nil
+      end
+
+      it "should still have next_page=nil when at end, despite set value" do
+        @page.current_page = 3
+        @page.next_page = 4
+        @page.next_page.must_be_nil
+      end
     end
 
-    it "should have next_page=nil when at end" do
-      @page.current_page = 3
-      @page.next_page.must_be_nil
-    end
+    describe "when total pages not known" do
+      before do
+        @page.total_entries = nil
+      end
 
-    it "should have next_page=current_page+1 when at end, despite set value" do
-      @page.current_page = 3
-      @page.next_page = 4
-      @page.next_page.must_be_nil
-    end
+      it "should have last_page=nil if next_page is known or assumed" do
+        # @page.next_page unset
+        @page.last_page.must_be_nil
 
-    it "should have next_page=current_page+1 when end known and not at end" do
-      @page.current_page = 2
-      @page.next_page.must_equal 3
-    end
+        # @page.next_page explicitly non-nil
+        @page.next_page = 2
+        @page.last_page.must_be_nil
+      end
 
-    it "should have next_page=current_page+1 when end known and not at end, despite set value" do
-      @page.current_page = 2
-      @page.next_page = nil
-      @page.next_page.must_equal 3
-    end
+      it "should have last_page=current_page if next_page is explicitly nil" do
+        @page.next_page = nil
+        @page.last_page.must_equal @page.current_page
+      end
 
-    it "should have next_page=current_page+1 when end unknown and not explicitly set" do
-      @page.total_entries = nil
-      @page.current_page = 2
-      @page.next_page.must_equal 3
-    end
+      it "should have next_page=current_page+1 when not explicitly set" do
+        @page.current_page = 2
+        @page.next_page.must_equal 3
+      end
 
-    it "should have next_page=set value when end unknown and explicitly set" do
-      @page.total_entries = nil
-      @page.next_page = nil
-      @page.current_page = 2
-      @page.next_page.must_be_nil
+      it "should have next_page=set value when explicitly set" do
+        @page.next_page = nil
+        @page.current_page = 2
+        @page.next_page.must_be_nil
+      end
     end
 
     it "should have previous_page=nil when at beginning" do

@@ -31,7 +31,7 @@ module Folio
       end
 
       def last_page
-        total_pages
+        (total_pages || next_page) ? total_pages : current_page
       end
 
       def next_page=(value)
@@ -39,15 +39,15 @@ module Folio
       end
 
       def next_page
-        if last_page && current_page >= last_page
-          # known last page and we've reached it. no next page (even if
-          # explicitly set)
+        if total_pages && current_page >= total_pages
+          # known number of pages and we've reached the last one. no next page
+          # (even if explicitly set)
           nil
-        elsif last_page || !defined?(@next_page)
-          # (1) known last page and we haven't reached it (because we're not
-          #     in the branch above), or
-          # (2) unknown last page, but nothing set, so we assume an infinite
-          #     stream
+        elsif total_pages || !defined?(@next_page)
+          # (1) known number of pages and we haven't reached the last one
+          #     (because we're not in the branch above), or
+          # (2) unknown number of pages, but nothing set, so we assume an
+          #     infinite stream
           # so there's a next page, and it's the one after this one
           current_page + 1
         else

@@ -67,9 +67,30 @@ describe Folio::Page do
       @page.must_respond_to :last_page=
     end
 
-    it "should mutate with last_page=" do
-      @page.last_page = 3
-      @page.last_page.must_equal 3
+    it "should mutate with last_page= when next_page is non-nil" do
+      @page.next_page = 3
+      @page.last_page = 5
+      @page.last_page.must_equal 5
+    end
+
+    it "should default last_page=nil if unset and next_page is non-nil" do
+      @page.current_page = 2
+      @page.next_page = 3
+      @page.last_page.must_be_nil
+    end
+
+    it "should default last_page=current_page if unset and next_page is nil" do
+    end
+
+    it "should have last_page=current_page if next_page is nil, even if explicitly set" do
+      @page.current_page = 2
+      @page.last_page.must_equal 2
+
+      @page.last_page = 4
+      @page.last_page.must_equal 2
+
+      @page.last_page = nil
+      @page.last_page.must_equal 2
     end
   end
 

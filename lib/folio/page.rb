@@ -30,7 +30,17 @@ module Folio
 
     # page identifier addressing the final page within the folio, if
     # known.
-    attr_accessor :last_page
+    def last_page=(value)
+      @last_page = value
+    end
+
+    def last_page
+      if next_page.nil?
+        current_page
+      else
+        @last_page
+      end
+    end
 
     # page identifier addressing the immediately following page within
     # the folio, if there is one.
